@@ -1,4 +1,5 @@
 from os.path import exists
+import subprocess
 from os import environ
 from string import Template
 
@@ -50,6 +51,11 @@ def exchange_public_token():
     exchange_request = ItemPublicTokenExchangeRequest(public_token=request.json['public_token'])
     exchange_response = client.item_public_token_exchange(exchange_request)
     access_token = exchange_response['access_token']
+    if environ.get('OP_ITEM'):
+        subprocess.run(['op', 'item', 'create', '--vault', 'services', '--category', 'password',
+                        '--title', environ['OP_ITEM'], f'password={access_token}', '--tags', 'plaid'],
+                       check=True, stdout=subprocess.DEVNULL)
+        return f"Access token stored in 1Password: services/{environ['OP_ITEM']}"
     with open(environ['ACCESS_TOKEN_FILE'], 'w') as f:
         f.write(access_token)
     return f"Access token written to: {environ['ACCESS_TOKEN_FILE']}"
