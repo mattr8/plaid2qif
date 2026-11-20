@@ -13,13 +13,13 @@ You should follow these steps for gaining access to each financial institution's
 * Configure your environment for authentication as documented in the [parent README](../README.md#authentication-configuration)
 
 ```
-cd ./gen-access-token
+cd ./manage-access-token
 cp sample.env /path/to/your/working/directory/.env
 
 # Configure as described in the [parent README](../README.md#authentication-configuration)
 vi .env
 
-python server.py
+python gen-token-server.py   # update-token-server.py refreshes an existing token
 open http://127.0.0.1:8080
 ```
 

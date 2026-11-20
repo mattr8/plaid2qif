@@ -4,7 +4,7 @@
 [![PyPi](https://img.shields.io/pypi/v/plaid2qif.svg?style=flat-square)](https://pypi.org/project/plaid2qif)
 \
 \
-[![Plaid2QIF Logo](gen-access-token/icon.svg)](https://github.com/eqbridges/plaid2qif)
+[![Plaid2QIF Logo](manage-access-token/icon.svg)](https://github.com/eqbridges/plaid2qif)
 # Plaid2QIF
 
 ## Description
@@ -43,7 +43,7 @@ Plaid2QIF downloads transactions from various financial institutions in JSON for
 
         $ pip install plaid2qif
 
-2. Authenticate and link with your financial institution (first time only).  To do this, follow the steps for using the associated [Account Linker](gen-access-token/README.md) tool.
+2. Authenticate and link with your financial institution (first time only).  To do this, follow the steps for using the associated [Account Linker](manage-access-token/README.md) tool.
 
 3. Configure your environment with required values. See "Authentication Configuration" below.
 

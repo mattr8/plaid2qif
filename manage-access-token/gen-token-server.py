@@ -63,31 +63,41 @@ def exchange_public_token():
 
 @app.route("/api/create-link-token", methods=['GET'])
 def create_link_token():
-    req = LinkTokenCreateRequest(
+    kwargs = dict(
             products=[Products("transactions")],
             client_name='Plaid2QIF Account Linker',
-            country_codes=[CountryCode('US')],
+            country_codes=[CountryCode('US'), CountryCode('CA')],
             language='en',
             user=LinkTokenCreateRequestUser(
                 client_user_id='absent-user'
             ),
             redirect_uri=environ['PLAID_SANDBOX_REDIRECT_URI']
         )
-    response = client.link_token_create(req)
+    # PLAID_CONSENT_PRODUCTS=investments also asks for consent to those products,
+    # which investment accounts need (else ADDITIONAL_CONSENT_REQUIRED on fetch).
+    consent = [p.strip() for p in environ.get('PLAID_CONSENT_PRODUCTS', '').split(',') if p.strip()]
+    if consent:
+        kwargs['additional_consented_products'] = [Products(p) for p in consent]
+    response = client.link_token_create(LinkTokenCreateRequest(**kwargs))
     return response.to_dict()
 
 
-@app.route("/", methods=['GET'])
+@app.route("/mrr/fin", methods=['GET'])
 def create_link():    
     template = 'home.html'
-    if exists(environ['ACCESS_TOKEN_FILE']):
+    already = (subprocess.run(['op', 'item', 'get', environ['OP_ITEM'], '--vault', 'services'],
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+               if environ.get('OP_ITEM') else exists(environ['ACCESS_TOKEN_FILE']))
+    if already:
         template = 'exists.html'
         
     with open(template, "r") as file:
         data = file.read()
 
+    storage = (f"1Password: services/{environ['OP_ITEM']}" if environ.get('OP_ITEM')
+               else environ['ACCESS_TOKEN_FILE'])
     t = Template(data)
-    return t.safe_substitute(access_token_storage=environ['ACCESS_TOKEN_FILE'])
+    return t.safe_substitute(access_token_storage=storage)
 
 
 @app.route('/icon.svg')
