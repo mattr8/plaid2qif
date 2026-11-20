@@ -1,4 +1,5 @@
 from os.path import exists
+import os
 from os import environ
 from string import Template
 
@@ -41,7 +42,7 @@ def init_client():
     api_client = plaid.ApiClient(configuration)
     return plaid_api.PlaidApi(api_client)
 
-html_path = f"{environ.get('FINANCES_PATH')}/vendor/plaid2qif/manage-access-token"
+html_path = os.path.dirname(os.path.abspath(__file__))  # the HTML files sit next to this script
 client = init_client()
 app = Flask('Plaid2QIF Account Updater')
 
