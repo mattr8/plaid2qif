@@ -77,7 +77,7 @@ def create_link_token():
     response = client.link_token_create(request)
     return response.to_dict()
 
-@app.route("/mrr/fin", methods=['GET'])
+@app.route("/", methods=['GET'])
 def create_link():    
     template = f"{html_path}/update-token.html"
         

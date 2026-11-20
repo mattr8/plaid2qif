@@ -82,7 +82,7 @@ def create_link_token():
     return response.to_dict()
 
 
-@app.route("/mrr/fin", methods=['GET'])
+@app.route("/", methods=['GET'])
 def create_link():    
     template = 'home.html'
     already = (subprocess.run(['op', 'item', 'get', environ['OP_ITEM'], '--vault', 'services'],
